@@ -1,0 +1,17 @@
+{
+		"version": "1.0.0",
+		"author": {"name":"YS","email":"nabdelkader@yellowsys.fr"},
+		"resources": [
+			{
+				"resourceId": "rId0",
+				"sourceType": 5,
+				"file": "resources/writebackV1F6242601478A43018027C075AB7A8DE5.pbiviz.json"
+			}
+		],
+		"visual": {"name":"writebackV1","displayName":"WritebackV1","guid":"writebackV1F6242601478A43018027C075AB7A8DE5","visualClassName":"Visual","version":"1.0.0","description":"description","supportUrl":"www.support.com","gitHubUrl":"www.github.com"},
+		"metadata": {
+			"pbivizjson": {
+				"resourceId": "rId0"
+			}
+		}
+	}

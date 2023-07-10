@@ -1,0 +1,83 @@
+{
+    "dataRoles": [
+        {
+            "displayName": "Category Data",
+            "name": "category",
+            "kind": "Grouping"
+        },
+        {
+            "displayName": "Measure Data",
+            "name": "measure",
+            "kind": "Measure"
+        }
+    ],
+    "objects": {
+        "WriteBack": {
+            "properties": {
+                "ConnectionString": {
+                    "displayName": "Connection String",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "TableName": {
+                    "displayName": "Table Name",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "TableSchema": {
+                    "displayName": "Table Schema",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "KeyColumn": {
+                    "displayName": "Key Column",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "IsBatchEdit": {
+                    "displayName": "Batch Editing",
+                    "type": {
+                        "bool": true
+                    }
+                }
+            }
+            }
+        }
+    ,
+    "dataViewMappings": [
+        {
+            "categorical": {
+                "categories": {
+                    "for": {
+                        "in": "category"
+                    },
+                    "dataReductionAlgorithm": {
+                        "top": {}
+                    }
+                },
+                "values": {
+                    "select": [
+                        {
+                            "bind": {
+                                "to": "measure"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "privileges": [{
+        "name": "WebAccess",
+        "essential": true,
+        "parameters": ["https://af-pocwb.azurewebsites.net/api/GetSQLTableStructure","https://af-pocwb.azurewebsites.net/api/ParseNewData"]
+    },
+    {
+        "name": "ExportContent",
+        "essential": true
+    }]
+}
