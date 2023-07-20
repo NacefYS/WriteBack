@@ -74,7 +74,7 @@
     "privileges": [{
         "name": "WebAccess",
         "essential": true,
-        "parameters": ["https://af-pocwb.azurewebsites.net/api/GetSQLTableStructure","https://af-pocwb.azurewebsites.net/api/ParseNewData"]
+        "parameters": ["https://af-pocwb.azurewebsites.net/api/GetSQLTableStructure","https://af-pocwb.azurewebsites.net/api/ParseNewData","https://af-pocwb.azurewebsites.net/api/GetDataFromTable"]
     },
     {
         "name": "ExportContent",

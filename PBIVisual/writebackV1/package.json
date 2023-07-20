@@ -13,14 +13,25 @@
     "lint": "tslint -c tslint.json -p tsconfig.json"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.0",
+    "@mui/material": "^5.14.0",
+    "@mui/x-data-grid": "^6.10.0",
     "@smarthtmlelements/smart-elements": "^6.2.0",
     "@types/d3": "5.7.2",
     "@types/node-fetch": "^2.6.4",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
     "d3": "5.12.0",
     "node-fetch": "^2.6.12",
     "powerbi-visuals-api": "5.1.0",
     "powerbi-visuals-utils-dataviewutils": "^6.0.1",
-    "powerbi-visuals-utils-formattingmodel": "5.0.0"
+    "powerbi-visuals-utils-formattingmodel": "5.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "smart-webcomponents": "^15.2.10",
+    "smart-webcomponents-react": "^15.2.11"
   },
   "devDependencies": {
     "ts-loader": "6.1.0",
