@@ -7,6 +7,7 @@ import fetch from "node-fetch";
 import { GridColDef } from '@mui/x-data-grid';
 import powerbi from "powerbi-visuals-api";
 import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
+
 import "./../style/visual.less";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -21,6 +22,7 @@ import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
 import { VisualSettings } from "./settings";
 import { easeExpInOut, text, window } from "d3";
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 declare global {
 	export interface Window {
 		generateData: any	
@@ -51,6 +53,7 @@ export class Visual implements IVisual {
         
         var tb = options.dataViews[0];
         this.visualSettings = VisualSettings.parse<VisualSettings>(tb);
+        console.log(tb);
         this.GetFilters(tb);
         
        await this.getDataStructure();
@@ -65,10 +68,12 @@ export class Visual implements IVisual {
         this.filters=new Array ();
         tb.categorical.categories.forEach(element => {
             var f:DataFilter=new DataFilter();
+            var myFormatter =valueFormatter.create({format: element.source.format});
             f.fieldName=element.source.displayName;
             f.values=new Array();
             element.values.forEach(v => {
-                f.values.push(v.toString());
+                
+                f.values.push( myFormatter.format(v).toString());
             });
             this.filters.push(f);
         });
@@ -153,7 +158,8 @@ export class Visual implements IVisual {
             body: JSON.stringify({
                 ConnectionString: this.visualSettings.WriteBack.ConnectionString,
                 TableName: this.visualSettings.WriteBack.TableName,
-                TableSchema: this.visualSettings.WriteBack.TableSchema
+                TableSchema: this.visualSettings.WriteBack.TableSchema,
+                Filters:this.filters
             }),
             headers: {
                 'Content-Type': 'text/plain',
@@ -174,7 +180,10 @@ export class Visual implements IVisual {
             data:data,
             InputDef:cd,
             RowId:this.visualSettings.WriteBack.KeyColumn,
-            Visible:true
+            Visible:true,
+            ConnectionString:this.visualSettings.WriteBack.ConnectionString,
+            TableName:this.visualSettings.WriteBack.TableName,
+            TableSchema:this.visualSettings.WriteBack.TableSchema
         })
        
     }

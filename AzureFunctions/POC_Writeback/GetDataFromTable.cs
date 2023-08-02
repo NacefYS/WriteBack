@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Data.SqlClient;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace POC_Writeback
 {
@@ -23,11 +25,15 @@ namespace POC_Writeback
 
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            BaseRequestStruncture data = JsonConvert.DeserializeObject<BaseRequestStruncture>(requestBody);
-
+            GetDataRequest data = JsonConvert.DeserializeObject<GetDataRequest>(requestBody);
+            string wherePart = "";
+            if (data.Filters != null)
+            {
+                wherePart = "WHERE "+String.Join(" AND ", data.Filters.Select(f => $"[{f.fieldName}] IN ({String.Join(",", f.values.Select(v => $"'{v}'"))})"));
+                    }
             SqlConnection conn = new SqlConnection(data.ConnectionString);
             conn.Open();
-            string query = $"select top 100000 * ,ROW_NUMBER ()over(order by (select null )) id from {data.TableSchema}.{data.TableName} for json path";
+            string query = $"select top 100000 * ,ROW_NUMBER ()over(order by (select null )) wbidGen from {data.TableSchema}.{data.TableName} {wherePart} for json path";
             SqlCommand command = new SqlCommand(query, conn);
             SqlDataReader reader = command.ExecuteReader();
             string resp = "";
@@ -46,5 +52,14 @@ namespace POC_Writeback
 
             return new OkObjectResult(resp);
         }
+    }
+    class GetDataRequest : BaseRequestStruncture
+    {
+        public List<DataFilter> Filters { get; set; }
+    }
+    class DataFilter
+    {
+        public string fieldName { get; set; }
+        public string[] values { get; set; }
     }
 }
