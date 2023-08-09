@@ -66,17 +66,18 @@ export class Visual implements IVisual {
     }
     public GetFilters(tb:powerbi.DataView){
         this.filters=new Array ();
-        tb.categorical.categories.forEach(element => {
-            var f:DataFilter=new DataFilter();
-            var myFormatter =valueFormatter.create({format: element.source.format});
-            f.fieldName=element.source.displayName;
-            f.values=new Array();
-            element.values.forEach(v => {
-                
-                f.values.push( myFormatter.format(v).toString());
+            if ( tb.categorical.categories != null){
+            tb.categorical.categories.forEach(element => {
+                var f:DataFilter=new DataFilter();
+                var myFormatter =valueFormatter.create({format: element.source.format});
+                f.fieldName=element.source.displayName;
+                f.values=new Array();
+                element.values.forEach(v => {
+                    f.values.push( myFormatter.format(v).toString());
+                });
+                this.filters.push(f);
             });
-            this.filters.push(f);
-        });
+        }
     }
     public async getDataStructure() {
         const response = await fetch('https://af-pocwb.azurewebsites.net/api/GetSQLTableStructure?code=oC1X-WeD-OneZdUjnKUhNxpNYjsUvB-ftMOrj0umuPuCAzFuk4Syhg==', {

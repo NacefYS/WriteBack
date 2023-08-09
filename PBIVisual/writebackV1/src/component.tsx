@@ -42,9 +42,10 @@ export class ReactGrid extends React.Component<{}, State>{
     // public static  updateddata:RowUpdate[];
     public state: State = initialState;
 
+    // componentDidMount()
     public componentWillMount() {
         ReactGrid.updateCallback = (newState: State): void => { 
-          
+
             this.setState(newState); 
 
         };
@@ -58,7 +59,8 @@ export class ReactGrid extends React.Component<{}, State>{
         this.state = initialState;
         // this.apiRef= useGridApiRef();
     }
-     
+    
+
     processRowUpd=async (newRow:GridRowModel,oldRow:GridRowModel) =>{
         var ru:RowUpdate=new RowUpdate();
         ru.OriginalRow=oldRow;
