@@ -56,7 +56,7 @@ export class Visual implements IVisual {
         console.log(tb);
         this.GetFilters(tb);
         
-       await this.getDataStructure();
+        await this.getDataStructure();
         if (this.visualSettings.WriteBack.IsBatchEdit) {
             await this.generateGrid();   
         }
@@ -186,7 +186,7 @@ export class Visual implements IVisual {
             TableName:this.visualSettings.WriteBack.TableName,
             TableSchema:this.visualSettings.WriteBack.TableSchema
         })
-       
+
     }
     public generateForm(){
         try{
@@ -201,31 +201,37 @@ export class Visual implements IVisual {
         tbl.id="WBForm";
         var tblheader: HTMLTableSectionElement = tbl.createTHead();
         var tblBody: HTMLTableSectionElement = tbl.createTBody();
+        
+        if (this.ColumnsDefinition && Array.isArray(this.ColumnsDefinition)) {
+            this.ColumnsDefinition.forEach(element => {
 
-        this.ColumnsDefinition.forEach(element => {
+                var brow = tblBody.insertRow()
+                var lblCell = brow.insertCell();
 
-            var brow = tblBody.insertRow()
-            var lblCell = brow.insertCell();
-
-            var lbl: HTMLLabelElement = document.createElement("label");
-            lbl.textContent = element.label;
-            lblCell.appendChild(lbl);
-            var lblInput = brow.insertCell();
-            var input: HTMLInputElement = document.createElement("input");
-            
-            input.type = element.dataType == "string" ? "text" : element.dataType;
-            input.placeholder = element.label;
-            input.name = element.label;
-            var defvalue="";
-            try{defvalue=this.filters.filter(f=>f.fieldName=element.label)[0].values[0];}catch{}
-            if(defvalue.length>0){
-                input.value=defvalue;
+                var lbl: HTMLLabelElement = document.createElement("label");
+                lbl.textContent = element.label;
+                lblCell.appendChild(lbl);
+                var lblInput = brow.insertCell();
+                var input: HTMLInputElement = document.createElement("input");
                 
-            }
-            
-            lblInput.appendChild(input);
+                input.type = element.dataType == "string" ? "text" : element.dataType;
+                input.placeholder = element.label;
+                input.name = element.label;
 
+                if (this.filters && this.filters.length > 0) {
+                    var defvalue="";
+                    try{
+                        defvalue=this.filters.filter(f=>f.fieldName=element.label)[0].values[0];
+                    } catch {}
+                    if (defvalue.length>0){
+                        input.value=defvalue;
+                        
+                    }
+            }    
+
+            lblInput.appendChild(input);
         });
+        }
         var btnSubmit: HTMLButtonElement = document.createElement("button");
         btnSubmit.textContent = "Save";
         btnSubmit.onclick = async () => {
@@ -236,7 +242,7 @@ export class Visual implements IVisual {
                 ds.Value = input.value;
                 datasubmits.push(ds);
             });
-           
+
             const response = await fetch('https://af-pocwb.azurewebsites.net/api/ParseNewData?code=sR4zeRc7EmkPV8aRWc9ARxGEEC22RyaJ8fBgkDUtBKfZAzFuxCN71g==', {
                 method: 'POST',
                 body: JSON.stringify({
