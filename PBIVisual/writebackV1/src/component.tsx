@@ -1,12 +1,16 @@
 
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { DataGrid, GridColDef,GridRowIdGetter,GridRowMode,GridRowModel,useGridApiRef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef,GridRowIdGetter,GridRowMode,GridRowModel,useGridApiRef, GridToolbarContainer, GridRowsProp, GridRowModesModel} from '@mui/x-data-grid';
 import { Box, Stack } from "@mui/material";
-import {NotificationContainer, NotificationManager} from 'react-notifications';
 import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import { GridApiCommunity } from "@mui/x-data-grid/models/api/gridApiCommunity";
+
+import { Grid} from 'smart-webcomponents-react/grid';
+import { RadioButton } from 'smart-webcomponents-react/radiobutton';
 export interface State {
     data: any,
     ColumnsDef: GridColDef[],
@@ -19,6 +23,35 @@ export interface State {
 
 
 }
+
+interface EditToolbarProps {
+    setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
+    setRowModesModel: (
+        newModel: (oldModel: GridRowModesModel) => GridRowModesModel,
+    ) => void;
+    }
+
+    function EditToolbar(props: EditToolbarProps) {
+    const { setRows, setRowModesModel } = props;
+    
+        const handleClick = () => {
+        //   const id = randomId();
+        //   setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
+        //   setRowModesModel((oldModel) => ({
+        //     ...oldModel,
+        //     [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+        //   }));
+        };
+    
+        return (
+        <GridToolbarContainer>
+            <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+            Add record
+            </Button>
+        </GridToolbarContainer>
+        );
+    }
+    
 
 export const initialState: State = {
     data: new Array(),
@@ -81,7 +114,7 @@ export class ReactGrid extends React.Component<{}, State>{
             NotificationManager.success('Record updated successfully', 'Success');
         });
     }
-    
+
     render() {
         const { data, ColumnsDef, InputDef, } = this.state;
         const rows=this.state.data;
@@ -93,14 +126,23 @@ export class ReactGrid extends React.Component<{}, State>{
 
         return (
             <Box visibility={Visible ? "visible" : "hidden"} style={{ height: '100%', width: '100%' }}>
-               
-                <DataGrid rows={rows} columns={columns} getRowId={() => Math.floor(Math.random() * 100000000)} processRowUpdate={async (updatedRow, originalRow) => {
-                    await pru(updatedRow, originalRow);
 
-                }
-                } onProcessRowUpdateError={(error) => {
-                    console.log("");
-                }} editMode="row" />
+                <DataGrid 
+                    rows={rows} 
+                    columns={columns} 
+                    getRowId={() => Math.floor(Math.random() * 100000000)} 
+                    processRowUpdate={async (updatedRow, originalRow) => {
+                        await pru(updatedRow, originalRow);
+                    }
+                    } 
+                    onProcessRowUpdateError={(error) => {
+                        console.log("");
+                    }} 
+                    editMode="row" 
+                    slots={{
+                        toolbar: EditToolbar,
+                    }}
+                />
             </Box>
         );
     }
