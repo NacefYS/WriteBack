@@ -35,12 +35,9 @@ interface EditToolbarProps {
     const { setRows, setRowModesModel } = props;
     
         const handleClick = () => {
-        //   const id = randomId();
-        //   setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
-        //   setRowModesModel((oldModel) => ({
-        //     ...oldModel,
-        //     [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-        //   }));
+            const newRow = {};
+            setRows((prevRows) => [...prevRows, newRow]);
+            //setRowModesModel((prevModel) => ({ ...prevModel, [newRow.id]: 'edit' }));
         };
     
         return (
@@ -78,9 +75,7 @@ export class ReactGrid extends React.Component<{}, State>{
     // componentDidMount()
     public componentWillMount() {
         ReactGrid.updateCallback = (newState: State): void => { 
-
             this.setState(newState); 
-
         };
     }
 
